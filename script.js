@@ -152,3 +152,223 @@ div7.appendChild(ulDiv7);
 all.appendChild(div7);
 
 
+// Button that toggles div color and size
+// const div8=document.createElement("div");
+// const blueDiv=document.createElement("div");
+// const butn=document.createElement("button");
+
+
+// blueDiv.className="challDiv";
+
+// butn.textContent="Toggle"
+
+// butn.addEventListener("click",()=>{
+//   blueDiv.classList.toggle("active");
+//   console.log("aaaaaaaaa");
+  
+// });
+
+// div8.appendChild(blueDiv);
+// div8.appendChild(butn);
+// all.appendChild(div8);
+
+// Display only Paris-based employees
+// function employeeCity(City){
+//     return workers.filter(emp=>{
+//         if(emp.city===City){      
+//         }
+//     });
+    
+// }
+
+// const div9=document.createElement("div");
+// all.appendChild(div9);
+
+
+// const parisEmployees=employeeCity("Paris");
+// if(parisEmployees.length>0){
+//     const listHtml = parisEmployees.map(emp => `<li>${emp.name}</li>`).join('');
+// }
+
+
+
+// Update title after 2 seconds on page load
+const div10=document.createElement("div");
+const buttn=document.createElement("button");
+
+div10.innerHTML=`<h3>Hello!</h3>`;
+buttn.textContent="Change title"
+
+buttn.addEventListener("click",()=>{
+    setTimeout(()=>{
+        div10.innerHTML=`<h3>BYE!</h3>`
+    },2000);
+})
+
+div10.appendChild(buttn);
+all.appendChild(div10);
+
+// Create array of names and salaries with map()
+const div11=document.createElement("div");
+
+const newArr=workers.map(emp=>{
+    return {nom:emp.name,
+        salary:emp.salary
+}
+})
+const formattedResult = JSON.stringify(newArr, null, 2);
+div11.innerHTML = `<pre>${formattedResult}</pre>`;
+all.appendChild(div11);
+
+// Filter employees with salary > 50000
+const div12 = document.createElement("div");
+
+const highSalary=workers.filter(worker=>{
+    return worker.salary>50000
+}).map(worker => {
+        
+        return `${worker.name} - $${worker.salary}`;
+});
+
+div12.innerHTML+=`${highSalary.join("<br>")}`
+all.appendChild(div12);
+
+// Get index of clicked employee in array
+// const div13 = document.createElement("div");
+// const liste=document.createElement("ul")
+// const li=document.createElement("li");
+
+// workers.forEach(worker=>{
+//     li.dataset.index = index; 
+//     li.textContent = `${worker.name} (cliquer pour voir l'index)`;
+
+//     li.addEventListener("click",(e)=>{
+//         const clickIndex=e.target.dataset.index;
+//         const nom=worker.name
+
+//         alert('l index de ${nom} est: ${clickIndex}');
+//     });
+//     ul.appendChild(li);
+// })
+
+
+// div13.appendChild(ul);
+// all.appendChild(div13);
+
+// Sum all salaries using reduce()
+// const div14 = document.createElement("div");
+
+// const totalSalary = workers.reduce((acc, worker) => {l
+//     return acc + worker.salary}, 0);
+
+//     div14.innerHTML=`<p> Total Salary: $ ${totalSalary} </p>`
+// all.appendChild(div14);
+
+
+// Sort employees by name (A-Z) with button
+const div15= document.createElement("div");
+const ulSorted=document.createElement("ul")
+
+const bton=document.createElement("button");
+bton.textContent="tri A-Z des noms"
+
+bton.addEventListener("click", () => {
+    const sortedWorkers = [...workers];
+
+    sortedWorkers.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+    });
+
+    ulSorted.innerHTML = ''; 
+
+    sortedWorkers.forEach(worker => {
+        const li = document.createElement("li");
+        li.textContent = worker.name;
+        ulSorted.appendChild(li);
+    });
+});
+
+
+div15.appendChild(ulSorted);
+div15.appendChild(bton);
+all.appendChild(div15);
+
+
+
+// Show all properties of first employee
+const div16 = document.createElement("div");
+const firstEmployee = workers[0];
+const keys= Object.keys(firstEmployee);
+const ulKeys = document.createElement("ul");
+
+keys.forEach(key => {
+    const li = document.createElement("li");
+    li.textContent = key;
+    ulKeys.appendChild(li);
+});
+
+div16.innerHTML = "Fist employee keys:";
+
+div16.appendChild(ulKeys);
+all.appendChild(div16);
+
+// Create HTML table from employee object
+// const div17 = document.createElement("div");
+// const table = document.createElement("table");
+
+// Object.entries(firstEmployee).forEach(([key, value]) => {
+// table.innerHTML+=`<table>
+// <tbody>
+// <tr> 
+// <td>${Object.key}</td>
+// <td>${Object.value}</td>
+// </tr>
+// `
+// });
+// table.innerHTML+=`</tbody> </table>`
+
+// div17.appendChild(table);
+// all.appendChild(div17);
+
+// Delete Employee Button using splice()
+const div19 = document.createElement("div");
+div19.innerHTML = "<h4>Supprimer un Employé:</h4>";
+
+const ulDelete = document.createElement("ul");
+
+
+// Fonction pour (re)générer la liste des employés avec boutons de suppression
+function renderDeleteList() {
+    ulDelete.innerHTML = ''; 
+
+    // affichage du nom et son id
+    workers.forEach((worker, index) => {
+        const li = document.createElement("li");
+        const workerInfo = document.createElement("span");
+        workerInfo.textContent = `${worker.name} (ID: ${worker.id})`;
+        li.appendChild(workerInfo);
+
+        //  bouton de supp
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = " Supprimer";
+        deleteBtn.style.cursor = "pointer";
+        
+        deleteBtn.dataset.employeeIndex = index;
+
+        deleteBtn.addEventListener('click', (event) => {
+            // Récupérer l'index stocké
+            const indexToDelete = parseInt(event.target.dataset.employeeIndex);
+            const deletedWorker = workers.splice(indexToDelete, 1);
+
+            renderDeleteList();
+        });
+
+        li.appendChild(deleteBtn);
+        ulDelete.appendChild(li);
+    });
+}
+
+
+renderDeleteList();
+div19.appendChild(ulDelete);
+all.appendChild(div19);
