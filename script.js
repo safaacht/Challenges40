@@ -355,9 +355,9 @@ function renderDeleteList() {
         
         deleteBtn.dataset.employeeIndex = index;
 
-        deleteBtn.addEventListener('click', (event) => {
+        deleteBtn.addEventListener('click', (e) => {
             // Récupérer l'index stocké
-            const indexToDelete = parseInt(event.target.dataset.employeeIndex);
+            const indexToDelete = parseInt(e.target.dataset.employeeIndex);
             const deletedWorker = workers.splice(indexToDelete, 1);
 
             renderDeleteList();
@@ -372,3 +372,220 @@ function renderDeleteList() {
 renderDeleteList();
 div19.appendChild(ulDelete);
 all.appendChild(div19);
+
+
+// Clone workers array using spread operator
+const div20 = document.createElement("div");
+
+const clone=[...workers];
+const cloneNames=clone.map(w=>w.name);
+cloneNames.forEach(name => {
+  const p = document.createElement("p");
+  p.textContent = name;
+  div20.appendChild(p);
+});
+
+
+all.appendChild(div20);
+
+// Map all salaries with 10% increase
+const div21 = document.createElement("div");
+const increment=workers.map(w=>{
+   return w.salary * 1.10;
+})
+workers.forEach((worker,i)=>{
+    div21.innerHTML+=`<p> ${worker.name} : $${increment[i]}</p>`
+})
+
+all.appendChild(div21);
+
+// Use reduce() to group employees by city
+const div22 = document.createElement("div");
+
+const cityGrp=workers.reduce((acc,worker)=>{
+    if (!acc[worker.city]) {          //checking if the city exist
+        acc[worker.city] = [];        // creation de tableau pr cette ville
+    }
+     acc[worker.city].push(worker.name)
+     return acc
+},{})
+
+for (const city in cityGrp) {
+    div22.innerHTML += `
+        <h5>${city}</h5>
+        <p>${cityGrp[city].join(", ")}</p>
+    `;
+}
+
+all.appendChild(div22);
+
+// Show warning if any employee is inactive
+const div23 = document.createElement("div");
+
+const warn=workers.some(w=>{
+    if(!w.active){
+        div23.innerHTML=`<p> Warning: Some employees are inactive!</p><br>`
+    }
+})
+
+all.appendChild(div23);
+
+
+// Verify if all employees earn > 30000
+const div24 = document.createElement("div");
+const earning=workers.every(w=>
+    w.salary>30000
+)
+
+if(earning){
+    div24.innerHTML=`<p> All employees earn more than $30,000</p><br>`
+
+}
+
+all.appendChild(div24);
+
+
+// Create deep clone with structuredClone()
+const div25 = document.createElement("div");
+
+const clonedWorker = structuredClone(workers[0]);
+clonedWorker.salary = 75000;
+
+div25.innerHTML=`
+<p>Deep cloned & modified: $${clonedWorker.salary} </p>
+<p>Original unchanged: $${workers[0].salary}</p>
+
+`
+all.appendChild(div25);
+
+
+// Filter employees by name or role
+const div26= document.createElement("div");
+const searchBar=document.createElement("input");
+
+// desplaying before the filter 
+workers.forEach(worker=>{
+    div26.innerHTML += `<p>${worker.name} - ${worker.role}</p>`;
+})
+
+searchBar.addEventListener("input",()=>{
+    const search=searchBar.value.toLocaleLowerCase();
+
+   const filtering= workers.filter(w=> w.name.toLowerCase().includes(search) || w.role.toLowerCase().includes(search));
+
+
+   div26.innerHTML = "";
+   div26.appendChild(searchBar);  
+
+   // desplaying after the filter
+   filtering.forEach(worker=>{
+    div26.innerHTML += `<p>${worker.name} - ${worker.role}</p>`;
+});
+});
+
+div26.appendChild(searchBar);
+all.appendChild(div26);
+
+
+// Select role to filter employees
+const div27= document.createElement("div");
+const select=document.createElement("select");
+const defaultOption = document.createElement("option");
+
+defaultOption.text = "Select role";  
+defaultOption.value = "";             
+select.add(defaultOption);
+
+const roles=[...new Set(workers.map(w=>w.role))];
+
+roles.forEach(role=>{
+    const option = document.createElement("option");
+    option.text = role;
+    option.value = role;
+    select.add(option);
+
+});
+
+workers.forEach(worker => {
+    div27.innerHTML += `<p>${worker.name} - ${worker.role}</p>`;
+});
+
+select.addEventListener("change", () => {
+    const selectedRole = select.value;
+
+    // filtration des employés
+    const filtered = selectedRole === "" 
+        ? workers 
+        : workers.filter(w => w.role === selectedRole);
+
+    div27.innerHTML = "";
+    div27.appendChild(select);
+
+
+    filtered.forEach(worker => {
+        div27.innerHTML += `<p>${worker.name} - ${worker.role}</p>`;
+    });
+});
+
+div27.appendChild(select);
+all.appendChild(div27);
+
+
+// Create full HTML table from workers
+const div28 = document.createElement("div");
+const table = document.createElement("table");
+
+const thead = document.createElement("thead");
+thead.innerHTML = `
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Role</th>
+    <th>City</th>
+    <th>Salary</th>
+  </tr>
+`;
+table.appendChild(thead);
+
+const tbody = document.createElement("tbody");
+
+workers.forEach(worker => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${worker.id}</td>
+      <td>${worker.name}</td>
+      <td>${worker.role}</td>
+      <td>${worker.city}</td>
+      <td>$${worker.salary.toLocaleString()}</td>
+    `;
+    tbody.appendChild(row);
+});
+
+table.appendChild(tbody);
+div28.appendChild(table);
+all.appendChild(div28);
+
+
+// Click headers to sort table columns
+const div30 = document.createElement("div");
+const names=workers.map(w=>w.name);
+
+const newHires = [
+  { name: 'Frank Hardy' },
+  { name: 'Grace Wilson' }
+];
+
+const allEmployees = workers.concat(newHires);
+
+div30.innerHTML = `
+  <p>Original: ${workers.length} employees</p>
+  <p>New hires: ${newHires.length} employees</p>
+  <p>Concatenated: ${allEmployees.length} employees</p>
+  <br>
+`;
+
+allEmployees.forEach(emp => {
+    div30.innerHTML += `<p>${emp.name}</p>`;
+});
+
+all.appendChild(div30);
